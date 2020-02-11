@@ -3,31 +3,49 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PhoneRepository")
+ * @ORM\Table()
+ * @ExclusionPolicy("all")
  */
 class Phone
 {
+
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
+     *
+     * @Expose()
+     *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Expose()
+     *
      */
     private $model;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Serializer\Expose()
+     *
      */
     private $color;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
      */
     private $camera;
 
@@ -50,6 +68,8 @@ class Phone
      * @ORM\Column(type="string", length=255)
      */
     private $battery;
+
+
 
     public function getId(): ?int
     {
