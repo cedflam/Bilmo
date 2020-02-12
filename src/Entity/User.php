@@ -3,9 +3,27 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Hateoas\Configuration\Annotation as Hateoas;
+
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="Cet email existe déjà !")
+ *
+ *  @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *          "api_user_show",
+ *          parameters = {"id" = "expr(object.getId())"},
+ *          absolute = true
+ *      ),
+ *      exclusion= @Hateoas\Exclusion(groups = "customer")
+ * )
+ *
  */
 class User
 {
@@ -13,32 +31,40 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"customer"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champs firstName ne peut être vide")
+     * @Groups({"customer"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champs lastName ne peut être vide")
+     * @Groups({"customer"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Le champs email ne peut être vide")
      */
     private $email;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="Le champs registeredAt ne peut être vide")
      */
     private $registeredAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="users", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
      */
     private $customer;
 

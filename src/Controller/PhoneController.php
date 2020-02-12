@@ -5,52 +5,56 @@ namespace App\Controller;
 use App\Entity\Phone;
 use App\Pagination\PaginatedCollection;
 use App\Repository\PhoneRepository;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\Serializer\SerializerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
 
-class PhoneController extends AbstractController
+class PhoneController extends AbstractFOSRestController
 {
     /**
      * @Rest\Get("/api/phones", name="api_phones_list")
-     * @Rest\View()
+     *
+     * @Rest\View(serializerGroups={"Default"})
      *
      * @param Request $request
      * @param PhoneRepository $phoneRepository
-     * @param SerializerInterface $serializer
-     * @return Response
+     * @return PaginatedCollection
      */
-    public function showAll(Request $request, PhoneRepository $phoneRepository, SerializerInterface $serializer )
+    public function showAll(Request $request, PhoneRepository $phoneRepository)
     {
-
         //Je récupère la page courante
         $page = $request->query->get('page',1);
-        //Je définis la limite de produits par page
+        //Je définis la variable de limite de produits par page
         $limit = 5;
+
         //Je récupère tous les produits
         $queryBuilder = $phoneRepository->findAllPhones();
 
+        //Configuration de pagerfanta
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit)
               ->setCurrentPage($page)
         ;
 
+        //Je déclare un tableau phones
         $phones = array();
+        //J'alimente le tableau avec les produits de la page courante
         foreach($pager->getCurrentPageResults() as $phone){
             $phones[] = $phone;
         }
 
-        return new PaginatedCollection(
-          $phones,
-          $pager->getNbResults()
+        //Je retourne la collection paginée
+        return  new PaginatedCollection(
+            $phones,
+            $pager->getNbResults()
         );
+
 
     }
 
@@ -62,7 +66,7 @@ class PhoneController extends AbstractController
      *     name="api_phone_show",
      *     requirements = {"id" = "\d+"}
      * )
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"detail"})
      *
      * @param Phone $phone
      * @param SerializerInterface $serialize

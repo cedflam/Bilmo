@@ -6,7 +6,6 @@ use App\Entity\Phone;
 use App\Repository\AbstractRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Pagerfanta\Pagerfanta;
 
 
 /**
@@ -17,6 +16,9 @@ use Pagerfanta\Pagerfanta;
  */
 class PhoneRepository extends ServiceEntityRepository
 {
+
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Phone::class);

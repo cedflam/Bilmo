@@ -4,16 +4,22 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Expose;
 use Hateoas\Configuration\Annotation as Hateoas;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PhoneRepository")
  * @ORM\Table()
- * @ExclusionPolicy("all")
  *
+ *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *          "api_phone_show",
+ *          parameters = {"id" = "expr(object.getId())"},
+ *          absolute = true
+ *      )
+ * )
  *
  */
 class Phone
@@ -23,8 +29,7 @@ class Phone
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     *
-     * @Expose()
+     * @Serializer\Groups("detail")
      *
      */
     private $id;
@@ -32,42 +37,48 @@ class Phone
     /**
      * @ORM\Column(type="string", length=255)
      *
-     * @Expose()
-     *
      */
     private $model;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
-     * @Serializer\Expose()
+     * @Serializer\Groups("detail")
      *
      */
     private $color;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups("detail")
      *
      */
     private $camera;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups("detail")
+     *
      */
     private $screen;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups("detail")
+     *
      */
     private $processor;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups("detail")
+     *
      */
     private $memory;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups("detail")
+     *
      */
     private $battery;
 

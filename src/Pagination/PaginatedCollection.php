@@ -12,6 +12,7 @@ class PaginatedCollection
 
     public function __construct($produits, $total)
     {
+
         $this->produits = $produits;
         $this->total = $total;
         $this->count = count($produits);
