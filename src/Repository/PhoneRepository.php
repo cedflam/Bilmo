@@ -5,8 +5,8 @@ namespace App\Repository;
 use App\Entity\Phone;
 use App\Repository\AbstractRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Pagerfanta\Pagerfanta;
 
 
 /**
@@ -22,14 +22,12 @@ class PhoneRepository extends ServiceEntityRepository
         parent::__construct($registry, Phone::class);
     }
 
-    public function findAllPhones($page, $limit)
+    public function findAllPhones()
     {
-        $query = $this->createQueryBuilder('p')
-            ->getQuery()
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit);
-        return new Paginator($query);
+        return $this->createQueryBuilder('phone');
     }
+
+
 
 
 }

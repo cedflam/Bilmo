@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Phone;
+use App\Pagination\PaginatedCollection;
 use App\Repository\PhoneRepository;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use JMS\Serializer\SerializerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\SerializerInterface;
-
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 
 
 class PhoneController extends AbstractController
@@ -25,22 +28,30 @@ class PhoneController extends AbstractController
      */
     public function showAll(Request $request, PhoneRepository $phoneRepository, SerializerInterface $serializer )
     {
+
         //Je récupère la page courante
-        $page = $request->query->get('page');
-        //Je définis la page par défaut
-        if(is_null($page) || $page < 1) {
-            $page = 1;
-        }
-        //Je définis le nombre d'éléments par page
+        $page = $request->query->get('page',1);
+        //Je définis la limite de produits par page
         $limit = 5;
-        //Je récupère la liste de phones
-        $phones = $phoneRepository->findAllPhones($page, $limit);
-        //Je serialize au format json
-        $data = $serializer->serialize($phones, 'json');
-        //Je retourne la response
-        return new Response($data, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+        //Je récupère tous les produits
+        $queryBuilder = $phoneRepository->findAllPhones();
+
+        $adapter = new DoctrineORMAdapter($queryBuilder);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage($limit)
+              ->setCurrentPage($page)
+        ;
+
+        $phones = array();
+        foreach($pager->getCurrentPageResults() as $phone){
+            $phones[] = $phone;
+        }
+
+        return new PaginatedCollection(
+          $phones,
+          $pager->getNbResults()
+        );
+
     }
 
     /**
@@ -48,7 +59,7 @@ class PhoneController extends AbstractController
      *
      * @Rest\Get(
      *     path = "/api/phones/{id}",
-     *     name="phone_show",
+     *     name="api_phone_show",
      *     requirements = {"id" = "\d+"}
      * )
      * @Rest\View()

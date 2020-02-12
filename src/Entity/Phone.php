@@ -6,13 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
-
+use Hateoas\Configuration\Annotation as Hateoas;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PhoneRepository")
  * @ORM\Table()
  * @ExclusionPolicy("all")
+ *
+ *
  */
 class Phone
 {
