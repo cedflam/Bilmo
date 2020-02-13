@@ -8,14 +8,14 @@ use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Model;
 
@@ -26,6 +26,13 @@ class UserController extends AbstractFOSRestController
     /**
      * Permet d'afficher le détail d'un utilisateur
      *
+     * @Rest\Get(
+     *     path = "/api/users/{id}",
+     *     name="api_user_show",
+     *     requirements = {"id" = "\d+"}
+     * )
+     * @Rest\View()
+     *
      * @Route("/api/users/{id}", name="api_user_show", methods={"GET"})
      *
      *  @SWG\Response(
@@ -33,7 +40,7 @@ class UserController extends AbstractFOSRestController
      *     description="Permet d'afficher le détail d'un utilisateur lié à un client",
      *     @SWG\Schema(
      *         type="array",
-     *         @SWG\Items(ref=@Model(type=User::class))
+     *         @SWG\Items(ref=@Model(type=User::class, groups={"user"}))
      *     )
      * )
      *
@@ -53,9 +60,8 @@ class UserController extends AbstractFOSRestController
     {
 
         //Je serialize
-        $data = $serializer->serialize($user, 'json', [
-            'groups' => "user"
-        ]);
+        $data = $serializer->serialize($user, 'json',
+            SerializationContext::create()->setGroups(array("user")));
         //Je crée une Response avec le Json $data
         $response = new Response($data);
         //J'indique à l'utilisateur qu'il s'agit d'une appli json
@@ -93,7 +99,7 @@ class UserController extends AbstractFOSRestController
      * @param Request $request
      * @param SerializerInterface $serializer
      * @param CustomerRepository $repo
-     * @return User
+     * @return \FOS\RestBundle\View\View
      * @throws ResourceValidationException
      */
     public function create(
@@ -150,7 +156,7 @@ class UserController extends AbstractFOSRestController
     /**
      * Permet de supprimer un utilisateur
      *
-     *  @SWG\Response(
+     * @SWG\Response(
      *     response=200,
      *     description="Permet de supprimer un utilisateur",
      *     @SWG\Schema(

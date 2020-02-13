@@ -3,8 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Hateoas\Configuration\Annotation as Hateoas;
 
@@ -21,8 +22,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          parameters = {"id" = "expr(object.getId())"},
  *          absolute = true
  *      ),
- *      exclusion= @Hateoas\Exclusion(groups = "customer")
- *
+ *     exclusion=@Hateoas\Exclusion(groups={"customer"})
  * )
  *
  */
@@ -32,21 +32,22 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customer","user"})
+     * @Groups({"user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs firstName ne peut être vide")
-     * @Groups({"customer","user"})
+     * @Groups({"user", "customer"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs lastName ne peut être vide")
-     * @Groups({"customer", "user"})
+     * @Groups({"user", "customer"})
+     *
      */
     private $lastName;
 
@@ -54,6 +55,7 @@ class User
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs email ne peut être vide")
      * @Groups({"user"})
+     *
      */
     private $email;
 
@@ -69,6 +71,7 @@ class User
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      * @Groups({"user"})
+     *
      */
     private $customer;
 

@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 
+
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -23,14 +26,14 @@ class CustomerController extends AbstractFOSRestController
      *     name="api_customer_show",
      *     requirements = {"id" = "\d+"}
      * )
-     * @Rest\View(serializerGroups={"customer"})
+     * @Rest\View()
      *
      * @SWG\Response(
      *     response=200,
      *     description="Affiche la liste des utilisateurs liés à un client",
      *     @SWG\Schema(
      *         type="array",
-     *         @SWG\Items(ref=@Model(type=Customer::class))
+     *         @SWG\Items(ref=@Model(type=Customer::class, groups={"customer"}))
      *     )
      * )
      *
@@ -43,7 +46,8 @@ class CustomerController extends AbstractFOSRestController
     public function show(SerializerInterface $serializer, Customer $customer)
     {
         //Je serialize
-        $data = $serializer->serialize($customer, 'json');
+        $data = $serializer->serialize($customer, 'json',
+            SerializationContext::create()->setGroups(array('customer')));
         //Je crée une Response avec le Json $data
         $response = new Response($data);
         //J'indique à l'utilisateur qu'il s'agit d'une appli json
