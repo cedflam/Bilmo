@@ -8,6 +8,7 @@ use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -99,7 +100,7 @@ class UserController extends AbstractFOSRestController
      * @param Request $request
      * @param SerializerInterface $serializer
      * @param CustomerRepository $repo
-     * @return \FOS\RestBundle\View\View
+     * @return View
      * @throws ResourceValidationException
      */
     public function create(
