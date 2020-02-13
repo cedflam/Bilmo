@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Exception\ResourceValidationException;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +16,34 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
-class UserController extends AbstractController
+
+class UserController extends AbstractFOSRestController
 {
 
     /**
      * Permet d'afficher le détail d'un utilisateur
      *
      * @Route("/api/users/{id}", name="api_user_show", methods={"GET"})
+     *
+     *  @SWG\Response(
+     *     response=200,
+     *     description="Permet d'afficher le détail d'un utilisateur lié à un client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=User::class))
+     *     )
+     * )
+     *
+     *  @SWG\Response(
+     *     response=500,
+     *     description="Affiche un message d'erreur lorsque l'utilisateur n'existe pas"
+     *     )
+     * )
+     *
+     * @SWG\Tag(name="Utilisateur")
      *
      * @param SerializerInterface $serializer
      * @param User $user
@@ -52,6 +73,17 @@ class UserController extends AbstractController
      *     name="api_users_create"
      * )
      * @Rest\View(StatusCode = 201)
+     *
+     *  @SWG\Response(
+     *     response=201,
+     *     description="Permet d'ajouter un nouvel utilisateur",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=User::class))
+     *     )
+     * )
+     *
+     * @SWG\Tag(name="Utilisateur")
      *
      * @ParamConverter("user", converter="fos_rest.request_body")
      *
@@ -117,6 +149,23 @@ class UserController extends AbstractController
 
     /**
      * Permet de supprimer un utilisateur
+     *
+     *  @SWG\Response(
+     *     response=200,
+     *     description="Permet de supprimer un utilisateur",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=User::class))
+     *     )
+     * )
+     *
+     *  @SWG\Response(
+     *     response=500,
+     *     description="Affiche un message d'erreur lorsque l'utilisateur n'existe pas"
+     *     )
+     * )
+     *
+     * @SWG\Tag(name="Utilisateur")
      *
      * @Route("/api/users/{id}", name="api_users_delete", methods={"DELETE"})
      * @param User $user

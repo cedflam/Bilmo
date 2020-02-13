@@ -22,6 +22,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          absolute = true
  *      ),
  *      exclusion= @Hateoas\Exclusion(groups = "customer")
+ *
  * )
  *
  */
@@ -31,33 +32,35 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"customer"})
+     * @Groups({"customer","user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs firstName ne peut être vide")
-     * @Groups({"customer"})
+     * @Groups({"customer","user"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs lastName ne peut être vide")
-     * @Groups({"customer"})
+     * @Groups({"customer", "user"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Le champs email ne peut être vide")
+     * @Groups({"user"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank(message="Le champs registeredAt ne peut être vide")
+     * @Groups({"user"})
      */
     private $registeredAt;
 
@@ -65,6 +68,7 @@ class User
      * @ORM\ManyToOne(targetEntity="App\Entity\Customer", inversedBy="users", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
+     * @Groups({"user"})
      */
     private $customer;
 

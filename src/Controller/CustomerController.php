@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 
-use JMS\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use JMS\Serializer\SerializerInterface;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Symfony\Component\HttpFoundation\Response;
 
 
-class CustomerController extends AbstractController
+
+class CustomerController extends AbstractFOSRestController
 {
     /**
      * Permet de voir la liste des utilisateurs inscrits liés à un client
@@ -20,7 +23,18 @@ class CustomerController extends AbstractController
      *     name="api_customer_show",
      *     requirements = {"id" = "\d+"}
      * )
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"customer"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Affiche la liste des utilisateurs liés à un client",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
+     *
+     * @SWG\Tag(name="Client")
      *
      * @param SerializerInterface $serializer
      * @param Customer $customer

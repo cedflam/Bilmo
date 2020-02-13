@@ -9,6 +9,9 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\Serializer\SerializerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Pagerfanta\Pagerfanta;
@@ -17,9 +20,22 @@ use Pagerfanta\Pagerfanta;
 class PhoneController extends AbstractFOSRestController
 {
     /**
+     * Permet d'afficher la liste des produits
+     *
      * @Rest\Get("/api/phones", name="api_phones_list")
      *
      * @Rest\View(serializerGroups={"Default"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Affiche la liste des produits",
+     *     @SWG\Schema(
+     *          type="array",
+     *          @SWG\Items(ref=@Model(type=Phone::class, groups={"Default"}))
+     *     )
+     * )
+     *
+     * @SWG\Tag(name="Produits")
      *
      * @param Request $request
      * @param PhoneRepository $phoneRepository
@@ -67,6 +83,21 @@ class PhoneController extends AbstractFOSRestController
      *     requirements = {"id" = "\d+"}
      * )
      * @Rest\View(serializerGroups={"detail"})
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Affiche le détail d'un produit",
+     *     @SWG\Schema(
+     *          type="array",
+     *          @SWG\Items(ref=@Model(type=Phone::class, groups={"detail"}))
+     *     )
+     * )
+     * @SWG\Response(
+     *     response=500,
+     *     description="Affiche une erreur lorsque le produit n'existe pas"
+     * )
+     *
+     * @SWG\Tag(name="Produits")
      *
      * @param Phone $phone
      * @param SerializerInterface $serialize
