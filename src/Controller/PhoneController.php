@@ -64,6 +64,11 @@ class PhoneController extends AbstractFOSRestController
             $phones[] = $phone;
         }
 
+        //Je crée une response que je mets en cache
+        $response = new Response($phones);
+        $response->setSharedMaxAge(3600);
+
+
         //Je retourne la collection paginée
         return  new PaginatedCollection(
             $phones,
@@ -108,6 +113,8 @@ class PhoneController extends AbstractFOSRestController
         $data = $serialize->serialize($phone, 'json');
         //Je crée une Response avec le Json $data
         $response = new Response($data);
+        //Je mets la response en cache
+        $response->setSharedMaxAge(3600);
         //J'indique à l'utilisateur qu'il s'agit d'une appli json
         $response->headers->set('Content-Type', 'application/json');
 
