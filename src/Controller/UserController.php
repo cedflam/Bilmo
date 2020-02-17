@@ -65,7 +65,7 @@ class UserController extends AbstractFOSRestController
             SerializationContext::create()->setGroups(array("user")));
         //Je crée une Response avec le Json $data
         $response = new Response($data);
-        //Je mets la response en cache
+        //Je mets la response en cache pour 3600s
         $response->setSharedMaxAge(3600);
         //J'indique à l'utilisateur qu'il s'agit d'une appli json
         $response->headers->set('Content-Type', 'application/json');
@@ -117,15 +117,20 @@ class UserController extends AbstractFOSRestController
 
     {
         //Je gère les erreurs
+        //Si $violations existe
         if(count($violations)){
+            //Je paramètre le message
             $message = "Le Json envoyé contient des données invalides";
+            //Je boucle sur $violations
             foreach($violations as $violation){
+                //J'ajoute les erreurs aux message
                 $message .= sprintf(
                     " Fiels %s: %s",
                     $violation->getPropertyPath(),
                     $violation->getMessage()
                 );
             }
+            //Je lève une nouvelle exception avec le message d'erreur
             throw new ResourceValidationException($message);
         }
 
@@ -150,7 +155,9 @@ class UserController extends AbstractFOSRestController
             $user,
             Response::HTTP_CREATED,
             [
-                'location' => $this->generateUrl('api_users_create', ['id' => $user->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+                'location' => $this->generateUrl('api_users_create',
+                    ['id' => $user->getId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL)
             ]
 
         );

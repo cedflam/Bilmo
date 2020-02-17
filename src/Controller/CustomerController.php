@@ -49,7 +49,7 @@ class CustomerController extends AbstractFOSRestController
             SerializationContext::create()->setGroups(array('customer')));
         //Je crée une Response avec le Json $data
         $response = new Response($data);
-        // Je mets en cache le response
+        // Je mets en cache la response pour 3600s
         $response->setSharedMaxAge(3600);
         //J'indique à l'utilisateur qu'il s'agit d'une appli json
         $response->headers->set('Content-Type', 'application/json');
