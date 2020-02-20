@@ -49,6 +49,7 @@ class CustomerController extends AbstractFOSRestController
      */
     public function show(SerializerInterface $serializer, Customer $customer)
     {
+
         //Je serialize
         $data = $serializer->serialize($customer, 'json',
             SerializationContext::create()->setGroups(array('customer')));
