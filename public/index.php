@@ -6,7 +6,7 @@ use App\CacheKernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-require dirname(__DIR__).'/config/bootstrap.php';
+require dirname(__DIR__) . '/config/bootstrap.php';
 
 if ($_SERVER['APP_DEBUG']) {
     umask(0000);
@@ -22,11 +22,11 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? $_ENV['TRUSTED_HOSTS'] ?? false
     Request::setTrustedHosts([$trustedHosts]);
 }
 
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
 // Wrap the default Kernel with the CacheKernel one in 'prod' environment
- if ('prod' === $kernel->getEnvironment()) {
-         $kernel = new CacheKernel($kernel);
-     }
+if ('prod' === $kernel->getEnvironment()) {
+    $kernel = new CacheKernel($kernel);
+}
 
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);

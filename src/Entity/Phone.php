@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Groups;
 use Hateoas\Configuration\Annotation as Hateoas;
 
@@ -31,12 +30,12 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          absolute = true
  *      ),
  *      exclusion=@Hateoas\Exclusion(groups={"detail"})
- *
  * )
  *
  */
 class Phone
 {
+
 
     /**
      * @ORM\Id()

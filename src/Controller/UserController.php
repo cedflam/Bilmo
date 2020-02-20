@@ -92,6 +92,12 @@ class UserController extends AbstractFOSRestController
      *     )
      * )
      *
+     *  @SWG\Response(
+     *     response=400,
+     *     description="Affiche les erreurs rencontrées"
+     *     )
+     * )
+     *
      * @SWG\Tag(name="Utilisateur")
      *
      * @ParamConverter("user", converter="fos_rest.request_body")
@@ -190,6 +196,7 @@ class UserController extends AbstractFOSRestController
      */
     public function delete(User $user, EntityManagerInterface $manager)
     {
+
         $manager->remove($user);
         //J'enregistre en bdd
         $manager->flush();

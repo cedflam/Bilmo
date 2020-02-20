@@ -35,6 +35,11 @@ class CustomerController extends AbstractFOSRestController
      *         @SWG\Items(ref=@Model(type=Customer::class, groups={"customer"}))
      *     )
      * )
+     *  @SWG\Response(
+     *     response=500,
+     *     description="Affiche un message d'erreur lorsque le client n'existe pas"
+     *     )
+     * )
      *
      * @SWG\Tag(name="Client")
      *

@@ -7,6 +7,8 @@ use App\Pagination\PaginatedCollection;
 use App\Repository\PhoneRepository;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -52,11 +54,12 @@ class PhoneController extends AbstractFOSRestController
         //Je récupère tous les produits
         $queryBuilder = $repo->findAllPhones();
 
-        //Configuration de pagerfanta
+        //Configuration de pagerfanta pour la pagination
         $adapter = new DoctrineORMAdapter($queryBuilder);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($limit)
-            ->setCurrentPage($page);
+              ->setCurrentPage($page);
+
 
         //Je déclare un tableau phones
         $phones = array();
@@ -65,10 +68,12 @@ class PhoneController extends AbstractFOSRestController
             $phones[] = $phone;
         }
 
+        //$pagination = new PaginatedCollection($phones, $pager->getNbResults());
         //Je serialize
         $data = $serializer->serialize($phones, 'json',
                 SerializationContext::create()->setGroups(array('list'))
-            );
+        );
+
         //Je crée une response avec les données serializées
         $response = new Response($data);
         //Je configure le cache pour 3600s
