@@ -14,7 +14,6 @@ You are in charge of the development of the showcase of BileMo mobile phones. Th
 # Built-with
 - Symfony 4.4
 - Doctrine
-- PHPUnit-Bridge
 - Jwt-Athentication
 - faker 
 - NelmioApiDocBundle
