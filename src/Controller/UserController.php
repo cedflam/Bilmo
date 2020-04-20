@@ -81,7 +81,7 @@ class UserController extends AbstractFOSRestController
      *     path="api/users",
      *     name="api_users_create"
      * )
-     * @Rest\View(StatusCode = 201)
+     * @Rest\View(StatusCode=201)
      *
      *  @SWG\Response(
      *     response=201,
@@ -201,7 +201,7 @@ class UserController extends AbstractFOSRestController
         //J'enregistre en bdd
         $manager->flush();
         //Je retourne la réponse
-        return new Response("User supprimé !", Response::HTTP_OK, []);
+        return new Response($user, Response::HTTP_OK, []);
     }
 
 

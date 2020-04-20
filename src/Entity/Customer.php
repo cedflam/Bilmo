@@ -37,7 +37,7 @@ class Customer implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     *@Groups({"customer", "user"})
+     * @Groups({"customer", "user"})
      */
     private $name;
 
